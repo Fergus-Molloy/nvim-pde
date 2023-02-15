@@ -55,7 +55,7 @@ keymap("n", "k", "gk", opts)
 keymap("n", "<c-h>", "<cmd>nohlsearch<CR>", opts)
 
 -- Fast switch buffers
--- keymap("n", "<leader><space>", "<cmd>b#<CR>", opts)
+keymap("n", "<leader><space>", "<cmd>b#<CR>", opts)
 
 -- Close buffers
 keymap("n", "<S-q>", "<cmd>bw<CR>", opts)

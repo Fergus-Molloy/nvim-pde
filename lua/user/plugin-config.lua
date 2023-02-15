@@ -50,3 +50,10 @@ require('toggleterm').setup {
         winblend = 3
     }
 }
+
+require("luasnip.loaders.from_vscode").lazy_load({ paths = "./snippets" })
+vim.keymap.set('i', '<c-c>', require('luasnip.extras.select_choice'), { noremap = true })
+vim.keymap.set("i", "<C-f>", "<Plug>luasnip-next-choice", {})
+vim.keymap.set("s", "<C-f>", "<Plug>luasnip-next-choice", {})
+vim.keymap.set("i", "<C-d>", "<Plug>luasnip-prev-choice", {})
+vim.keymap.set("s", "<C-d>", "<Plug>luasnip-prev-choice", {})

@@ -21,23 +21,29 @@ require('telescope').setup {
             },
         },
     },
-    -- pickers = {
-    --     find_files = {
-    --         theme = "dropdown"
-    --     }
-    -- },
     extensions = {
         file_browser = {
             grouped = true,
-            previewer = true,
             hijack_netrw = true,
+            mappings = {
+                i = {
+                    ['<a-d>'] = false,
+                    ['<c-A>'] = require('telescope').extensions.file_browser.actions.create_from_prompt,
+                    ['<c-s-d>'] = require('telescope').extensions.file_browser.actions.remove,
+                    ['<c-r>'] = require('telescope').extensions.file_browser.actions.rename,
+
+                }
+            }
         },
         fzf = {
             fuzzy = false,
             override_generic_sorter = true,
             override_file_sorter = true,
             case_mode = "smart_case",
-        }
+        },
+        ["ui-select"] = {
+            theme = "cursor",
+        },
     },
 }
 
@@ -47,19 +53,21 @@ pcall(require('telescope').load_extension, 'fzf')
 pcall(require('telescope').load_extension, 'file_browser')
 -- Enable telescope project management
 pcall(require('telescope').load_extension, 'project')
+-- Enable telescope as vim.ui.select
+pcall(require('telescope').load_extension, 'ui-select')
 
 local dropdown = require('telescope.themes').get_dropdown
 --local ivy = require('telescope.themes').get_ivy
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader>b', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()
-    -- You can pass additional configuration to telescope to change theme, layout, etc.
-    require('telescope.builtin').current_buffer_fuzzy_find(dropdown {
-        winblend = 10,
-        previewer = false,
-    })
+  -- You can pass additional configuration to telescope to change theme, layout, etc.
+  require('telescope.builtin').current_buffer_fuzzy_find(dropdown {
+      winblend = 10,
+      previewer = false,
+  })
 end, { desc = '[/] Fuzzily search in current buffer]' })
 
 vim.keymap.set('n', '<leader>ft', require('telescope.builtin').quickfix, { desc = '' })
@@ -70,7 +78,7 @@ vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[F]ind in [D]iagnostics' })
 vim.keymap.set('n', '<leader>fp', require('telescope').extensions.project.project, { desc = '[F]ind in [D]iagnostics' })
 vim.keymap.set('n', '<leader>cd', function()
-    require('telescope').extensions.file_browser.file_browser({ hidden = true })
+  require('telescope').extensions.file_browser.file_browser({ hidden = true, })
 end, { noremap = true, desc = '[C]hange [D]irectory' })
 
 vim.keymap.set('n', '<leader>gb', require('telescope.builtin').git_branches, { desc = '[G]it [B]ranches' })

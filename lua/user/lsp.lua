@@ -17,8 +17,10 @@ local on_attach = function(_, bufnr)
 
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-  vim.keymap.set('n', '<leader>do', require('telescope.builtin').diagnostics,
+  vim.keymap.set('n', '<leader>do', vim.diagnostic.open_float,
       { noremap = true, silent = true, desc = "[D]iagnostic [O]pen" })
+  vim.keymap.set('n', '<leader>ad', require('telescope.builtin').diagnostics,
+      { noremap = true, silent = true, desc = "[A]ll [D]iagnostics" })
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -108,6 +110,12 @@ cmp.event:on(
     cmp_autopairs.on_confirm_done()
 )
 
+local has_words_before = function()
+  unpack = unpack or table.unpack
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
 cmp.setup {
     snippet = {
         expand = function(args)
@@ -118,6 +126,16 @@ cmp.setup {
         ['<C-d>'] = cmp.mapping.scroll_docs( -4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-n>'] = function()
+          if luasnip.expand_or_jumpable() then
+            luasnip.expand_or_jump()
+          end
+        end,
+        ['<C-p>'] = function()
+          if luasnip.jumpable( -1) then
+            luasnip.jump( -1)
+          end
+        end,
         ['<CR>'] = cmp.mapping.confirm {
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
@@ -142,7 +160,7 @@ cmp.setup {
         end, { 'i', 's' }),
     },
     sources = {
-        { name = 'nvim_lsp' },
         { name = 'luasnip' },
+        { name = 'nvim_lsp' },
     },
 }
