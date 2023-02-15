@@ -58,7 +58,10 @@ keymap("n", "<c-h>", "<cmd>nohlsearch<CR>", opts)
 -- keymap("n", "<leader><space>", "<cmd>b#<CR>", opts)
 
 -- Close buffers
-keymap("n", "<S-q>", "<cmd>Bdelete!<CR>", opts)
+keymap("n", "<S-q>", "<cmd>bw<CR>", opts)
+
+-- Reload vim config
+keymap("n", "<leader>R", "<cmd>lua ReloadConfig()<cr>", opts)
 
 -- Better paste
 keymap("v", "p", '"_dP', opts)
