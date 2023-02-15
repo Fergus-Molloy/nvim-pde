@@ -7,15 +7,18 @@ require('telescope').setup {
             i = {
                 ['<C-u>'] = false,
                 ['<C-d>'] = false,
-                ['<esc>'] = actions.close
+                ['<esc>'] = actions.close,
+                ["<A-p>"] = require("telescope.actions.layout").toggle_preview,
             },
         },
         layout_strategy = "vertical",
         layout_config = {
-            height = math.floor(vim.o.lines * 0.7),
-            width = vim.o.columns,
-            prompt_position = "bottom",
-            preview_height = 0.4,
+            vertical = {
+                width = vim.o.columns - 4,
+                height = math.floor(vim.o.lines * 0.9),
+                prompt_position = "bottom",
+                preview_height = 0.6,
+            },
         },
     },
     -- pickers = {
@@ -25,8 +28,16 @@ require('telescope').setup {
     -- },
     extensions = {
         file_browser = {
+            grouped = true,
+            previewer = true,
             hijack_netrw = true,
         },
+        fzf = {
+            fuzzy = false,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+            case_mode = "smart_case",
+        }
     },
 }
 
@@ -38,17 +49,17 @@ pcall(require('telescope').load_extension, 'file_browser')
 pcall(require('telescope').load_extension, 'project')
 
 local dropdown = require('telescope.themes').get_dropdown
-local ivy = require('telescope.themes').get_ivy
+--local ivy = require('telescope.themes').get_ivy
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()
-    -- You can pass additional configuration to telescope to change theme, layout, etc.
-    require('telescope.builtin').current_buffer_fuzzy_find(dropdown {
-        winblend = 10,
-        previewer = false,
-    })
+  -- You can pass additional configuration to telescope to change theme, layout, etc.
+  require('telescope.builtin').current_buffer_fuzzy_find(dropdown {
+      winblend = 10,
+      previewer = false,
+  })
 end, { desc = '[/] Fuzzily search in current buffer]' })
 
 vim.keymap.set('n', '<leader>ft', require('telescope.builtin').quickfix, { desc = '' })
@@ -59,10 +70,8 @@ vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[F]ind in [D]iagnostics' })
 vim.keymap.set('n', '<leader>fp', require('telescope').extensions.project.project, { desc = '[F]ind in [D]iagnostics' })
 vim.keymap.set('n', '<leader>cd', function()
-    require('telescope').extensions.file_browser.file_browser({ hidden = true })
+  require('telescope').extensions.file_browser.file_browser({ hidden = true })
 end, { noremap = true, desc = '[C]hange [D]irectory' })
 
 vim.keymap.set('n', '<leader>gb', require('telescope.builtin').git_branches, { desc = '[G]it [B]ranches' })
-vim.keymap.set('n', '<leader>gs', function()
-    require('telescope.builtin').git_status(dropdown())
-end, { desc = '[G]it [S]tatus' })
+vim.keymap.set('n', '<leader>gs', require('telescope.builtin').git_status, { desc = '[G]it [S]tatus' })
