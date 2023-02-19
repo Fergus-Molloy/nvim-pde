@@ -2,7 +2,7 @@
 	"New Test": {
 		"prefix": "test",
 		"body": [
-			"#[${2|test,tokio::test|}]",
+			"#[test]",
 			"fn ${1:test_name}() {",
 			"\t$0",
 			"}"
@@ -15,7 +15,7 @@
 			"pub"
 		],
 		"body": [
-			"${5|pub ,async ,pub async |}fn ${1:function_name}(${2:arguments}) ${3:-> ${4:ReturnType} }{",
+			"${5:modifiers}fn ${1:function_name}(${2:arguments}) ${3:-> ${4:ReturnType} }{",
 			"\t$0",
 			"}"
 		]
@@ -53,9 +53,19 @@
 	},
 	"Struct": {
 		"prefix": [
-			"str",
-			"pub"
+			"str"
 		],
-		"body": "struct ${1:Name}${2|{$3},($3)|}"
+		"body": [
+			"struct ${1:Name} {",
+			"\t$0",
+			"}"
+		]
+	},
+	"Unit Struct": {
+		"prefix": [
+			"tup",
+			"tstr"
+		],
+		"body": "struct($0)"
 	}
 }

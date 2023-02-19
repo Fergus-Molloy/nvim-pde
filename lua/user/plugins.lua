@@ -29,8 +29,11 @@ if not status_ok then
     return
 end
 
+local util = require('packer.util');
+
 -- Have packer use a popup window
 packer.init {
+    compile_path = util.join_paths(vim.fn.stdpath('data'), 'packer', 'packer-compiled.lua'),
     display = {
         open_fn = function()
             return require("packer.util").float { border = "rounded" }
@@ -116,6 +119,11 @@ return packer.startup(function(use)
         use { "nvim-telescope/telescope-project.nvim" }
         -- use telescope for the default vim.ui.select
         use { "nvim-telescope/telescope-ui-select.nvim" }
+        -- Lua
+        use {
+            "folke/todo-comments.nvim",
+            requires = "nvim-lua/plenary.nvim",
+        }
 
         -- Automatically set up your configuration after cloning packer.nvim
         -- Put this at the end after all plugins

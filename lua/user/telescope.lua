@@ -42,7 +42,8 @@ require('telescope').setup {
             case_mode = "smart_case",
         },
         ["ui-select"] = {
-            theme = "cursor",
+            require("telescope.themes").get_cursor {
+            },
         },
     },
 }
