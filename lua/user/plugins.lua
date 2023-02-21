@@ -33,7 +33,6 @@ local util = require('packer.util');
 
 -- Have packer use a popup window
 packer.init {
-    compile_path = util.join_paths(vim.fn.stdpath('data'), 'packer', 'packer-compiled.lua'),
     display = {
         open_fn = function()
             return require("packer.util").float { border = "rounded" }
@@ -49,19 +48,14 @@ return packer.startup(function(use)
         use { "nvim-lualine/lualine.nvim" } -- better powerline
         use { "lukas-reineke/indent-blankline.nvim" } -- add indent guides to all lines
         use { "tpope/vim-sleuth" } -- better git commands in vim
-        use { "windwp/nvim-autopairs" }
-        --use { "kyazdani42/nvim-tree.lua" } -- new nerd tree
+        use { "windwp/nvim-autopairs" } -- pair up quotes and such
+        use { "kyazdani42/nvim-tree.lua" } -- new nerd tree
         use { "akinsho/bufferline.nvim", requires = { 'kyazdani42/nvim-web-devicons' } } -- buffers are tabs now
         use { "akinsho/toggleterm.nvim", tag = "*" } -- quick access to terminal
         use { "lewis6991/impatient.nvim" } -- faster load times
 
         -- greeter
-        use {
-            'goolord/alpha-nvim',
-            config = function()
-                require 'alpha'.setup(require 'alpha.themes.dashboard'.config)
-            end
-        }
+        use { 'goolord/alpha-nvim' }
 
         -- Colorschemes
         use { "morhetz/gruvbox" } -- best color scheme

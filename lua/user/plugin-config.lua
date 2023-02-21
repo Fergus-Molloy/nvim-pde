@@ -1,6 +1,7 @@
 -- faster load times
 require('impatient').enable_profile()
 
+require('alpha').setup(require('alpha.themes.dashboard').config)
 -- Set lualine as statusline
 -- See `:help lualine.txt`
 require('lualine').setup {
@@ -67,3 +68,61 @@ vim.keymap.set("i", "<C-f>", "<Plug>luasnip-next-choice", {})
 vim.keymap.set("s", "<C-f>", "<Plug>luasnip-next-choice", {})
 vim.keymap.set("i", "<C-d>", "<Plug>luasnip-prev-choice", {})
 vim.keymap.set("s", "<C-d>", "<Plug>luasnip-prev-choice", {})
+
+require('nvim-tree').setup{ -- BEGIN_DEFAULT_OPTS
+  view = {
+    mappings = {
+      list = {
+        -- user mappings go here
+      },
+    },
+  },
+  renderer = {
+    icons = {
+      git_placement = "before",
+      modified_placement = "after",
+      glyphs = {
+        folder = {
+          arrow_closed = "",
+          arrow_open = "",
+          default = "",
+          open = "",
+          empty = "",
+          empty_open = "",
+        },
+        git = {
+          untracked = "?",
+          staged = "+",
+          renamed = "»",
+          unstaged = "!",
+          unmerged = "",
+          deleted = "✗",
+          ignored = "◌",
+        },
+      },
+    },
+    special_files = { "Cargo.toml", "Makefile", "README.md", "readme.md" },
+  },
+  update_focused_file = {
+    enable = true,
+    update_root = true,
+  },
+  diagnostics = {
+    enable = true,
+    show_on_dirs = false,
+    show_on_open_dirs = false,
+    severity = {
+      min = vim.diagnostic.severity.HINT,
+      max = vim.diagnostic.severity.ERROR,
+    },
+    icons = {
+      hint = "",
+      info = "",
+      warning = "",
+      error = "",
+    },
+  },
+}
+
+
+vim.keymap.set('n', '<leader>fb', require('nvim-tree.api').tree.toggle, { noremap=true, desc= "[F]ile [B]rowser" })
