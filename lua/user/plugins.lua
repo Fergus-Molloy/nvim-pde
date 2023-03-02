@@ -40,6 +40,12 @@ packer.init {
     },
 }
 
+-- configure color scheme
+vim.g.gruvbox_bold = 1;
+vim.g.gruvbox_italics = 1;
+vim.g.gruvbox_underline = 1;
+vim.g.gruvbox_undercurl = 1;
+
 -- Install your plugins here
 return packer.startup(function(use)
         -- My plugins here
@@ -54,8 +60,13 @@ return packer.startup(function(use)
         use { "akinsho/toggleterm.nvim", tag = "*" } -- quick access to terminal
         use { "lewis6991/impatient.nvim" } -- faster load times
 
-        -- greeter
-        use { 'goolord/alpha-nvim' }
+    -- greeter
+    use {
+        'goolord/alpha-nvim',
+        config = function()
+            require 'alpha'.setup(require 'alpha.themes.dashboard'.config)
+        end
+    }
 
         -- Colorschemes
         use { "morhetz/gruvbox" } -- best color scheme
