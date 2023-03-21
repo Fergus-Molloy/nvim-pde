@@ -18,9 +18,9 @@ local on_attach = function(_, bufnr)
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
   vim.keymap.set('n', '<leader>do', vim.diagnostic.open_float,
-      { noremap = true, silent = true, desc = "[D]iagnostic [O]pen" })
+    { noremap = true, silent = true, desc = "[D]iagnostic [O]pen" })
   vim.keymap.set('n', '<leader>ad', require('telescope.builtin').diagnostics,
-      { noremap = true, silent = true, desc = "[A]ll [D]iagnostics" })
+    { noremap = true, silent = true, desc = "[A]ll [D]iagnostics" })
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -53,21 +53,24 @@ end
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
-    -- clangd = {},
-    -- gopls = {},
-    -- pyright = {},
-    rust_analyzer = {
-        ["rust-analyzer"] = {
-            checkOnSave = true,
-            check = {
-                -- overrideCommand = "cargo clippy --workspaces --message-format=json --all-targets -- -W clippy::pedantic",
-                command = "clippy",
-                extraArgs = { "--", "-W", "clippy::pedantic" },
-            },
-        },
+  -- clangd = {},
+  -- gopls = {},
+  -- pyright = {},
+  rust_analyzer = {
+    ["rust-analyzer"] = {
+      checkOnSave = true,
+      check = {
+        -- overrideCommand = "cargo clippy --workspaces --message-format=json --all-targets -- -W clippy::pedantic",
+        command = "clippy",
+        extraArgs = { "--", "-W", "clippy::pedantic" },
+      },
     },
-    -- tsserver = {},
-    --'lua-language-server' = {},
+  },
+  omnisharp = {
+    cmd = { "dotnet", "/usr/bin/dotnet" },
+  },
+  -- tsserver = {},
+  -- 'lua-language-server' = {},
 }
 
 -- Setup neovim lua configuration
@@ -83,17 +86,17 @@ require('mason').setup()
 local mason_lspconfig = require 'mason-lspconfig'
 
 mason_lspconfig.setup {
-    ensure_installed = vim.tbl_keys(servers),
+  ensure_installed = vim.tbl_keys(servers),
 }
 
 mason_lspconfig.setup_handlers {
-    function(server_name)
-      require('lspconfig')[server_name].setup {
-          capabilities = capabilities,
-          on_attach = on_attach,
-          settings = servers[server_name],
-      }
-    end,
+  function(server_name)
+    require('lspconfig')[server_name].setup {
+      capabilities = capabilities,
+      on_attach = on_attach,
+      settings = servers[server_name],
+    }
+  end,
 }
 
 -- Turn on lsp status information
@@ -106,8 +109,8 @@ local cmp = require 'cmp'
 local luasnip = require 'luasnip'
 
 cmp.event:on(
-    'confirm_done',
-    cmp_autopairs.on_confirm_done()
+  'confirm_done',
+  cmp_autopairs.on_confirm_done()
 )
 
 local has_words_before = function()
@@ -117,52 +120,52 @@ local has_words_before = function()
 end
 
 cmp.setup {
-    preselect = cmp.PreselectMode.None,
-    completion = { completeopt = 'menu,menuone,noinsert,noselect' },
-    snippet = {
-        expand = function(args)
-          luasnip.lsp_expand(args.body)
-        end,
+  preselect = cmp.PreselectMode.None,
+  completion = { completeopt = 'menu,menuone,noinsert,noselect' },
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end,
+  },
+  mapping = cmp.mapping.preset.insert {
+    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-n>'] = function()
+      if luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      end
+    end,
+    ['<C-p>'] = function()
+      if luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      end
+    end,
+    ['<CR>'] = cmp.mapping.confirm {
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = true,
     },
-    mapping = cmp.mapping.preset.insert {
-        ['<C-d>'] = cmp.mapping.scroll_docs( -4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-n>'] = function()
-          if luasnip.expand_or_jumpable() then
-            luasnip.expand_or_jump()
-          end
-        end,
-        ['<C-p>'] = function()
-          if luasnip.jumpable( -1) then
-            luasnip.jump( -1)
-          end
-        end,
-        ['<CR>'] = cmp.mapping.confirm {
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
-        },
-        ['<Tab>'] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_next_item()
-          elseif luasnip.expand_or_jumpable() then
-            luasnip.expand_or_jump()
-          else
-            fallback()
-          end
-        end, { 'i', 's' }),
-        ['<S-Tab>'] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_prev_item()
-          elseif luasnip.jumpable( -1) then
-            luasnip.jump( -1)
-          else
-            fallback()
-          end
-        end, { 'i', 's' }),
-    },
-    sources = {
-        { name = 'luasnip' },
-        { name = 'nvim_lsp' },
-    },
+    ['<Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+  },
+  sources = {
+    { name = 'luasnip' },
+    { name = 'nvim_lsp' },
+  },
 }
