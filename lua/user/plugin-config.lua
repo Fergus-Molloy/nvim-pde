@@ -1,4 +1,3 @@
--- faster load times
 require('impatient').enable_profile()
 
 require('alpha').setup(require('alpha.themes.dashboard').config)

@@ -59,6 +59,7 @@ return packer.startup(function(use)
         use { "akinsho/bufferline.nvim", requires = { 'kyazdani42/nvim-web-devicons' } } -- buffers are tabs now
         use { "akinsho/toggleterm.nvim", tag = "*" } -- quick access to terminal
         use { "lewis6991/impatient.nvim" } -- faster load times
+        use { "justinmk/vim-sneak" } -- better f
 
     -- greeter
     use {
