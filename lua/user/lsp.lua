@@ -1,3 +1,6 @@
+vim.diagnostic.config({
+  virtual_text = false,
+})
 -- LSP settings.
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
@@ -15,22 +18,27 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-  vim.keymap.set('n', '<leader>do', vim.diagnostic.open_float,
+  nmap('<leader>rn', '<cmd>Lspsaga rename<cr>', '[R]e[n]ame')
+  nmap('<leader>ca', '<cmd>Lspsaga code_action<cr>', '[C]ode [A]ction')
+  vim.keymap.set('n', '<leader>do', '<cmd>Lspsaga show_line_diagnostics<cr>',
     { noremap = true, silent = true, desc = "[D]iagnostic [O]pen" })
-  vim.keymap.set('n', '<leader>ad', require('telescope.builtin').diagnostics,
+  vim.keymap.set('n', '<leader>ad', '<cmd>Lspsaga show_buf_diagnostics',
     { noremap = true, silent = true, desc = "[A]ll [D]iagnostics" })
 
-  nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+  nmap('ho', '<cmd>Lspsaga lsp_finder<cr>', 'Open [Ho]ver')
+  nmap('pd', '<cmd>Lspsaga peek_definition<cr>', '[P]eek [D]efinition')
+  nmap('gd', '<cmd>Lspsaga goto_definition<cr>', '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+  nmap('gi', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
   nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
+  nmap("<leader>o", "<cmd>Lspsaga outline<CR>", "Toggle [O]utline")
+
   -- See `:help K` for why this keymap
-  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+  nmap('K', "<cmd>Lspsaga hover_doc<CR>", 'Hover Documentation')
+  nmap('KK', "<cmd>Lspsaga hover_doc ++keep<CR>", 'Hover Documentation')
   nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
